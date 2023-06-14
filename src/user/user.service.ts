@@ -4,6 +4,7 @@ import * as mongoose from 'mongoose';
 import { User } from './schema/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { validate } from 'class-validator';
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UserService {
@@ -21,10 +22,27 @@ export class UserService {
 
     //password matching
     if(user.password != user.confirmPassword){
-        throw new BadRequestException("Passwords do not match'")
+        throw new BadRequestException("Passwords do not match")
     }
-        const res = await this.userModel.create(user);
-        return res;
+
+    //check if user already exists 
+    const userFind = await this.userModel.findOne({ email : user.email});
+    if (userFind){
+        throw new BadRequestException("This email is already registered")
+    }
+
+    //hash password 
+    const salt = await bcrypt.genSalt();
+    const hashPassword = await bcrypt.hash(user.password,salt);
+
+    const newUser = {
+        name: user.name,
+        email: user.email,
+        password: hashPassword,
+        role: user.role,
+    }
+    const res = await this.userModel.create(newUser);
+    return res;
     
     }
 
