@@ -16,7 +16,7 @@ export class UserController {
     }
 
     @Get('getByEmail')
-    async getUserByEmail( email: string): Promise<User | undefined>{
+    async getUserByEmail(@Body('email') email: string): Promise<User | undefined>{
 
         return this.userService.getUserByEmail(email);
     }
