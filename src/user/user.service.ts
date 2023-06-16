@@ -37,14 +37,21 @@ export class UserService {
 
     const newUser = {
         name: user.name,
-        email: user.email,
+        email: user.email,              
         password: hashPassword,
         role: user.role,
     }
     const res = await this.userModel.create(newUser);
     return res;
-    
-    }
+    }   
 
+   async getUserByEmail(email: string): Promise<User | undefined> {
+  const res = await this.userModel.findOne({ email: String(email) });
+  return res;
+}
+      
+      
+      
+      
 }
  
