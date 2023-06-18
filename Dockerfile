@@ -1,14 +1,25 @@
-FROM node:18
+# Use a Node.js base image with a specific version
+FROM node:14
 
-WORKDIR /usr/src/app
+# Set the working directory inside the container
+WORKDIR /app
 
+# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-RUN npm install
-RUN npm install -g nodemon
+# Install build dependencies for bcrypt
+RUN apt-get update && \
+    apt-get install -y build-essential && \
+    apt-get clean
 
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code to the working directory
 COPY . .
 
-EXPOSE 6000
+# Expose a port for the application to listen on
+EXPOSE 3000
 
-CMD [ "npm","start" ]
+# Set the command to run the application
+CMD [ "npm", "start" ]

@@ -46,11 +46,9 @@ export class UserService {
     }   
 
    async getUserByEmail(email: string): Promise<User | undefined> {
-  const res = await this.userModel.findOne({ email: String(email) });
+  const res = await this.userModel.findOne({ email: email });
   return res;
 }
-      
-      
       
       
 }
